@@ -27,21 +27,21 @@
 
     <main class="screen">
       <section class="intro">
-        <div class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>сделано с любовью к деталям</div>
+        <div class="eyebrow reveal"><span class="eyebrow-dot" aria-hidden="true"></span>сделано с любовью к деталям</div>
 
-        <h1 class="hero-title">
+        <h1 class="hero-title reveal">
           <span class="title-line">Обычный</span>
           <span class="title-line">Тамик<span class="accent-dot">.</span></span>
           <span class="title-line title-line--gradient">Музыкальный</span>
         </h1>
 
-        <p class="hero-text">
+        <p class="hero-text reveal">
           На вид — обычный человек. Но внутри него живёт звук.<br />
           Нажми на карточку: Тамик переключится в музыкальный<br />
           режим и произнесёт то, что записано в этом MP3-файле.
         </p>
 
-        <div class="author-list" aria-label="Автор и репозиторий">
+        <div class="author-list reveal" aria-label="Автор и репозиторий">
           <a class="author-chip" href="https://t.me/DornegE" target="_blank" rel="noopener noreferrer" aria-label="Автор в Телеграме">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 20c-.2 1-.8 1.3-1.7.8l-4.7-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.4-5.6 9.4-8.5c.4-.4-.1-.6-.6-.3L7.6 12.8 2.3 11c-1-.3-1-1 .2-1.5l18-6.9c.8-.3 1.5.2 1.4 1.7Z"/></svg>
             <span>@DornegE</span><span aria-hidden="true">↗</span>
@@ -56,41 +56,43 @@
       <section class="stage" id="stage">
         <div class="stage-aura" aria-hidden="true"></div>
 
-        <button class="tamic-frame" id="tamicFrame" type="button" aria-pressed="false" aria-label="Нажмите, чтобы переключить Тамика в музыкальный режим">
+        <button class="tamic-frame reveal" id="tamicFrame" type="button" aria-pressed="false" aria-label="Нажмите, чтобы переключить Тамика в музыкальный режим">
           <img class="tamic-still" id="tamicStill" src="assets/tamic-calm-card.jpg" alt="Обычный Тамик" draggable="false" />
           <video class="tamic-video" id="tamicVideo" src="assets/tamic-on.mp4" muted playsinline preload="auto"></video>
         </button>
 
-        <button class="player-toggle" id="playerToggle" type="button" aria-expanded="false" aria-controls="player">
+        <button class="player-toggle reveal" id="playerToggle" type="button" aria-expanded="false" aria-controls="player">
           <span class="player-toggle-icon" aria-hidden="true">♫</span><span>Плеер</span><span class="player-toggle-arrow" aria-hidden="true">›</span>
         </button>
 
         <div class="player-wrap" id="playerWrap">
           <section class="player" id="player" aria-label="Аудиоплеер" aria-hidden="true">
-            <div class="player-head">
-              <span class="player-kicker">СЕЙЧАС ИГРАЕТ</span>
-              <h2 class="player-title" id="playerTitle">Тамик</h2>
-            </div>
+            <div class="player-stage">
+              <div class="player-content">
+                <div class="player-head">
+                  <span class="player-kicker">СЕЙЧАС ИГРАЕТ</span>
+                  <h2 class="player-title" id="playerTitle">Тамик</h2>
+                </div>
 
-            <div class="visualizer" id="visualizer" aria-hidden="true"></div>
+                <div class="visualizer" id="visualizer" aria-hidden="true"></div>
 
-            <div class="player-timeline">
-              <span class="time" id="time">0:00</span>
-              <div class="progress" id="progress" role="slider" tabindex="0" aria-label="Позиция воспроизведения" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                <span class="progress-track"><span class="progress-fill" id="progressFill"></span></span>
+                <div class="player-timeline">
+                  <span class="time" id="time">0:00</span>
+                  <div class="progress" id="progress" role="slider" tabindex="0" aria-label="Позиция воспроизведения" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span class="progress-track"><span class="progress-fill" id="progressFill"></span></span>
+                  </div>
+                  <span class="time" id="duration">0:00</span>
+                </div>
+
+                <div class="player-foot">
+                  <div class="play-stack" id="playStack">
+                    <button class="btn btn-primary play-state play-on" id="playBtn" type="button" aria-pressed="false"><span class="btn-symbol" aria-hidden="true">▶</span><span>Включить звук</span></button>
+                    <button class="btn btn-primary play-state play-off" id="pauseBtn" type="button" aria-label="Пауза"><span class="btn-symbol" aria-hidden="true">Ⅱ</span><span>Пауза</span></button>
+                  </div>
+                </div>
               </div>
-              <span class="time" id="duration">0:00</span>
-            </div>
 
-            <div class="player-foot">
-              <div class="play-stack" id="playStack">
-                <button class="btn btn-primary play-state play-on" id="playBtn" type="button" aria-pressed="false"><span class="btn-symbol" aria-hidden="true">▶</span><span>Включить звук</span></button>
-                <button class="btn btn-primary play-state play-off" id="pauseBtn" type="button" aria-label="Пауза"><span class="btn-symbol" aria-hidden="true">Ⅱ</span><span>Пауза</span></button>
-              </div>
-              <button class="icon-btn gear-btn" id="gearBtn" type="button" aria-label="Настройки плеера" aria-expanded="false" aria-controls="soundMenu"><span id="gearIcon" aria-hidden="true">⚙</span></button>
-            </div>
-
-            <div class="sound-menu" id="soundMenu" aria-hidden="true">
+              <div class="sound-menu" id="soundMenu" aria-hidden="true">
               <strong class="sound-menu-title">Звук</strong>
               <div class="field">
                 <label class="file-btn small" for="soundFile">Выбрать аудиофайл</label>
@@ -103,8 +105,10 @@
                   <button type="button" data-speed="0.5">0,5×</button><button type="button" data-speed="1" class="active">1×</button><button type="button" data-speed="1.5">1,5×</button><button type="button" data-speed="2">2×</button>
                 </div>
               </div>
-              <span class="sound-name" id="soundName">Сейчас: Тамик</span>
             </div>
+            </div>
+
+            <button class="icon-btn gear-btn" id="gearBtn" type="button" aria-label="Настройки плеера" aria-expanded="false" aria-controls="soundMenu"><span id="gearIcon" aria-hidden="true">⚙</span></button>
 
             <audio id="audio" src="assets/tamic-voice.mp3" preload="metadata" playsinline webkit-playsinline></audio>
           </section>
