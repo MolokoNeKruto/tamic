@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
   <meta name="theme-color" content="#08080b" />
   <meta name="description" content="Тамик — обычный до нажатия, музыкальный после." />
   <title>Тамик — звуковой режим</title>
@@ -10,8 +10,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="assets/tamic-calm-card.jpg" />
   <link rel="preload" as="image" href="assets/tamic-music-card.jpg" />
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <link rel="preload" as="video" href="assets/tamic-on.mp4" type="video/mp4" />
+  <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 <body>
   <div class="background" aria-hidden="true">
@@ -22,78 +24,52 @@
     <div class="grain"></div>
   </div>
 
-  <header class="nav">
-    <a class="brand" href="#top" aria-label="Тамик — наверх">
-      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      <span class="brand-name">ТАМИК<span>™</span></span>
-    </a>
-    <div class="nav-right">
-      <span class="nav-edition">01 / SOUND EDITION</span>
-      <span class="nav-status"><i class="status-dot" aria-hidden="true"></i><span id="navStatus">ожидание</span></span>
-    </div>
-  </header>
+  <div class="app">
+    <header class="nav">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="brand-name">ТАМИК<span>™</span></span>
+      </div>
+    </header>
 
-  <main id="top">
-    <section class="hero">
-      <div class="hero-copy">
-        <div class="eyebrow reveal">
+    <main class="screen">
+      <section class="intro">
+        <div class="eyebrow">
           <span class="eyebrow-dot" aria-hidden="true"></span>
           интерактивный артефакт
         </div>
 
-        <h1 class="hero-title reveal">
+        <h1 class="hero-title">
           <span class="title-line">Обычный</span>
           <span class="title-line">Тамик<span class="accent-dot">.</span></span>
           <span class="title-line title-line--gradient">Музыкальный</span>
         </h1>
 
-        <p class="hero-text reveal">
-          На вид — обычный человек. Но внутри него живёт звук.
-          Нажми на карточку: Тамик переключится в музыкальный режим
-          и запустит фразу из MP3-файла.
+        <p class="hero-text">
+          Нажми на Тамика — и он сразу переключится в музыкальный режим
+          и произнесёт свою фразу.
         </p>
+      </section>
 
-        <div class="hero-hint reveal">
-          <span class="tap-icon" aria-hidden="true"><i></i></span>
-          <span>Один тап по карточке — и он запоёт</span>
-        </div>
-      </div>
+      <section class="stage" id="stage">
+        <div class="stage-aura" aria-hidden="true"></div>
 
-      <div class="stage-column">
-        <div class="stage reveal" id="stage">
-          <div class="stage-aura" aria-hidden="true"></div>
-          <div class="rings" id="rings" aria-hidden="true">
-            <span class="ring"></span><span class="ring"></span>
-          </div>
+        <button class="tamic-frame" id="tamicFrame" type="button" aria-pressed="false"
+                aria-label="Нажмите, чтобы переключить Тамика в музыкальный режим">
+          <img class="tamic-still" id="tamicStill" src="assets/tamic-calm-card.jpg" alt="Обычный Тамик" draggable="false" />
+          <video class="tamic-video" id="tamicVideo" src="assets/tamic-on.mp4" muted playsinline preload="auto"></video>
+        </button>
 
-          <button class="card-tilt" id="card" type="button" aria-pressed="false"
-                  aria-label="Нажмите, чтобы переключить Тамика в музыкальный режим">
-            <span class="card-flip" id="cardFlip">
-              <span class="face face-front">
-                <img src="assets/tamic-calm-card.jpg" alt="Обычный Тамик" draggable="false" />
-                <span class="face-scrim" aria-hidden="true"></span>
-              </span>
-              <span class="face face-back">
-                <img src="assets/tamic-music-card.jpg" alt="Музыкальный Тамик" draggable="false" />
-                <span class="face-scrim" aria-hidden="true"></span>
-              </span>
-            </span>
-            <span class="card-edge" aria-hidden="true"></span>
-          </button>
+        <button class="player-toggle" id="playerToggle" type="button" aria-expanded="false" aria-controls="player">
+          <span class="player-toggle-icon" aria-hidden="true">♫</span>
+          <span>Плеер</span>
+          <span class="player-toggle-arrow" aria-hidden="true">↑</span>
+        </button>
 
-          <div class="stage-controls">
-            <button class="stage-play" id="stagePlay" type="button" aria-label="Включить звук" aria-pressed="false">
-              <span id="stagePlayIcon" aria-hidden="true">▶</span>
-            </button>
-            <span class="stage-mode" id="stageMode">IDLE</span>
-          </div>
-        </div>
-
-        <section class="player reveal" id="player" aria-label="Аудиоплеер">
+        <section class="player" id="player" aria-label="Аудиоплеер" aria-hidden="true">
           <div class="player-head">
             <span class="player-kicker">СЕЙЧАС ИГРАЕТ</span>
             <h2 class="player-title">Голос Тамика</h2>
-            <span class="player-live" id="playerLive"><i aria-hidden="true"></i> звук выключен</span>
           </div>
 
           <div class="visualizer" id="visualizer" aria-hidden="true"></div>
@@ -112,23 +88,14 @@
               <span class="btn-symbol" id="playIcon" aria-hidden="true">▶</span>
               <span id="playLabel">Включить звук</span>
             </button>
-            <button class="icon-btn" id="muteBtn" type="button" aria-label="Выключить звук" aria-pressed="false">
-              <span id="muteIcon" aria-hidden="true"></span>
-            </button>
-            <button class="icon-btn" id="stopBtn" type="button" aria-label="Играть сначала" title="Сначала">
-              <span aria-hidden="true">↺</span>
-            </button>
-            <button class="icon-btn" id="soundMenuBtn" type="button" aria-label="Заменить звук"
-                    aria-expanded="false" aria-controls="soundMenu" title="Заменить звук">
-              <span aria-hidden="true">⚙</span>
+            <button class="icon-btn gear-btn" id="gearBtn" type="button" aria-label="Настройки звука"
+                    aria-expanded="false" aria-controls="soundMenu">
+              <span id="gearIcon" aria-hidden="true">⚙</span>
             </button>
           </div>
 
           <div class="sound-menu" id="soundMenu" aria-hidden="true">
-            <div class="sound-menu-head">
-              <strong>Заменить звук</strong>
-              <button class="sound-menu-close" id="soundMenuClose" type="button" aria-label="Закрыть меню">×</button>
-            </div>
+            <strong class="sound-menu-title">Заменить звук</strong>
             <label class="file-btn" for="soundFile">Выбрать аудиофайл</label>
             <input type="file" id="soundFile" accept="audio/*" hidden />
             <button class="sound-reset" id="soundReset" type="button">Вернуть оригинальный звук</button>
@@ -137,43 +104,10 @@
 
           <audio id="audio" src="assets/tamic-voice.mp3" preload="metadata" playsinline webkit-playsinline></audio>
         </section>
-      </div>
-    </section>
+      </section>
+    </main>
+  </div>
 
-    <section class="features" id="how">
-      <div class="section-head reveal">
-        <span class="kicker">КАК ЭТО РАБОТАЕТ</span>
-        <h2>Маленький жест.<br /><span>Большой момент.</span></h2>
-      </div>
-
-      <div class="feature-grid">
-        <article class="feature reveal">
-          <span class="feature-num">01</span>
-          <span class="feature-icon" aria-hidden="true">◎</span>
-          <h3>Тап — и режим сменился</h3>
-          <p>Карточка переворачивается, а Тамик становится музыкальным.</p>
-        </article>
-        <article class="feature reveal">
-          <span class="feature-num">02</span>
-          <span class="feature-icon" aria-hidden="true">♫</span>
-          <h3>Звук без пауз</h3>
-          <p>Тишина в начале вырезана — фраза начинается сразу после нажатия.</p>
-        </article>
-        <article class="feature reveal">
-          <span class="feature-num">03</span>
-          <span class="feature-icon" aria-hidden="true">▥</span>
-          <h3>Живая визуализация</h3>
-          <p>Полосы реагируют на реальный звук — свой файл тоже можно загрузить.</p>
-        </article>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <span>ТАМИК™ — SOUND EDITION</span>
-    <span>сделано с любовью к деталям</span>
-  </footer>
-
-  <script src="app.js?v=2" defer></script>
+  <script src="app.js?v=3" defer></script>
 </body>
 </html>
