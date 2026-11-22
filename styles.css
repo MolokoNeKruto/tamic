@@ -21,8 +21,6 @@
   --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
   --rx: 0deg;
   --ry: 0deg;
-  --sx: 50%;
-  --sy: 50%;
 }
 
 * { box-sizing: border-box; }
@@ -49,27 +47,27 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Фон ---------- */
 .background { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
 
+/* Мягкие градиенты вместо blur() — выглядит так же, но почти не грузит GPU */
 .mesh {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.45;
+  opacity: 0.42;
   will-change: transform;
 }
 .mesh-1 {
-  width: 52vw; height: 52vw; left: -18vw; top: -18vw;
-  background: radial-gradient(circle, rgba(255, 106, 69, 0.55), transparent 68%);
-  animation: drift1 22s ease-in-out infinite alternate;
+  width: 56vw; height: 56vw; left: -20vw; top: -20vw;
+  background: radial-gradient(circle, rgba(255, 106, 69, 0.42) 0%, rgba(255, 106, 69, 0.16) 38%, transparent 70%);
+  animation: drift1 24s ease-in-out infinite alternate;
 }
 .mesh-2 {
-  width: 46vw; height: 46vw; right: -14vw; top: 8vh;
-  background: radial-gradient(circle, rgba(139, 108, 255, 0.50), transparent 68%);
-  animation: drift2 26s ease-in-out infinite alternate;
+  width: 50vw; height: 50vw; right: -16vw; top: 6vh;
+  background: radial-gradient(circle, rgba(139, 108, 255, 0.38) 0%, rgba(139, 108, 255, 0.14) 40%, transparent 70%);
+  animation: drift2 28s ease-in-out infinite alternate;
 }
 .mesh-3 {
-  width: 60vw; height: 60vw; left: 22vw; bottom: -34vw;
-  background: radial-gradient(circle, rgba(72, 215, 255, 0.25), transparent 70%);
-  animation: drift3 30s ease-in-out infinite alternate;
+  width: 64vw; height: 64vw; left: 20vw; bottom: -36vw;
+  background: radial-gradient(circle, rgba(72, 215, 255, 0.18) 0%, transparent 70%);
+  animation: drift3 32s ease-in-out infinite alternate;
 }
 .grid {
   position: absolute; inset: 0;
@@ -80,34 +78,16 @@ a { color: inherit; text-decoration: none; }
   mask-image: radial-gradient(ellipse at 50% 30%, #000 10%, transparent 78%);
   -webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 10%, transparent 78%);
 }
+/* Статичный grain: раньше он дёргался каждое 0.6 с и перерисовывал весь экран */
 .grain {
-  position: absolute; inset: -50%;
-  opacity: 0.045;
+  position: absolute; inset: 0;
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grainShift 0.6s steps(4) infinite;
 }
 
-@keyframes drift1 { to { transform: translate3d(8vw, 6vh, 0) scale(1.15); } }
-@keyframes drift2 { to { transform: translate3d(-9vw, 10vh, 0) scale(1.2); } }
-@keyframes drift3 { to { transform: translate3d(6vw, -8vh, 0) scale(1.1); } }
-@keyframes grainShift {
-  0% { transform: translate(0, 0); } 25% { transform: translate(-2%, 1%); }
-  50% { transform: translate(1%, -2%); } 75% { transform: translate(2%, 2%); }
-  100% { transform: translate(-1%, -1%); }
-}
-
-/* Светящийся курсор */
-.cursor-halo {
-  position: fixed; left: 0; top: 0; width: 420px; height: 420px;
-  margin: -210px 0 0 -210px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 106, 69, 0.13), rgba(139, 108, 255, 0.06) 40%, transparent 70%);
-  pointer-events: none; z-index: 1; opacity: 0;
-  transition: opacity 0.5s ease;
-  will-change: transform;
-}
-@media (hover: hover) and (pointer: fine) {
-  body.has-pointer .cursor-halo { opacity: 1; }
-}
+@keyframes drift1 { to { transform: translate3d(8vw, 6vh, 0) scale(1.12); } }
+@keyframes drift2 { to { transform: translate3d(-9vw, 10vh, 0) scale(1.15); } }
+@keyframes drift3 { to { transform: translate3d(6vw, -8vh, 0) scale(1.08); } }
 
 /* ---------- Навигация ---------- */
 .nav {
@@ -139,9 +119,8 @@ a { color: inherit; text-decoration: none; }
 .nav-status {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 8px 14px; border-radius: 100px;
-  border: 1px solid var(--stroke); background: var(--glass);
+  border: 1px solid var(--stroke); background: rgba(24, 24, 31, 0.8);
   font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: var(--muted);
-  backdrop-filter: blur(14px);
 }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted-2); transition: 0.3s; }
 body.is-playing .status-dot { background: #4ade80; box-shadow: 0 0 12px #4ade80; animation: pulseDot 1.2s ease-in-out infinite; }
@@ -152,10 +131,12 @@ body.is-playing .nav-status { color: #c9f7d6; border-color: rgba(74, 222, 128, 0
 main { position: relative; z-index: 2; }
 .hero {
   max-width: 1440px; margin: 0 auto;
-  padding: clamp(24px, 5vh, 70px) clamp(20px, 5vw, 72px) clamp(60px, 9vh, 120px);
+  padding: clamp(24px, 5vh, 70px) clamp(20px, 5vw, 72px) clamp(40px, 6vh, 80px);
   display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: clamp(30px, 6vw, 90px); align-items: center; min-height: 76vh;
+  gap: clamp(30px, 6vw, 90px); align-items: start;
 }
+/* Плеер живёт рядом с карточкой — не нужно листать туда-сюда */
+.stage-column { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
 
 .eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
@@ -179,7 +160,6 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(100deg, var(--accent) 0%, var(--accent-2) 42%, #fff2d6 72%, var(--violet) 110%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
   position: relative;
-  filter: drop-shadow(0 8px 40px rgba(255, 106, 69, 0.22));
 }
 .accent-dot { color: var(--accent); }
 
@@ -210,8 +190,7 @@ main { position: relative; z-index: 2; }
 }
 .btn-primary:hover { box-shadow: 0 20px 46px rgba(255, 106, 69, 0.42), inset 0 1px 0 rgba(255,255,255,0.6); }
 .btn-secondary {
-  color: var(--text); background: var(--glass); border-color: var(--stroke-strong);
-  backdrop-filter: blur(16px);
+  color: var(--text); background: rgba(28, 28, 36, 0.72); border-color: var(--stroke-strong);
 }
 .btn-secondary:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.3); }
 .btn-symbol { font-size: 12px; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 7px; background: rgba(0,0,0,0.12); }
@@ -237,16 +216,14 @@ main { position: relative; z-index: 2; }
 /* ---------- 3D-сцена ---------- */
 .stage {
   position: relative; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; perspective: 1500px; min-height: 580px;
+  justify-content: center; perspective: 1500px; min-height: 520px;
 }
 .stage-aura {
-  position: absolute; width: 70%; aspect-ratio: 1; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,106,69,0.22), rgba(139,108,255,0.12) 45%, transparent 70%);
-  filter: blur(45px); z-index: 0; transition: opacity 0.6s ease, transform 0.9s var(--ease-spring);
-  animation: auraFloat 8s ease-in-out infinite alternate;
+  position: absolute; width: 78%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,106,69,0.15) 0%, rgba(139,108,255,0.07) 45%, transparent 70%);
+  z-index: 0; opacity: 0.8; transition: opacity 0.5s ease; pointer-events: none;
 }
-@keyframes auraFloat { to { transform: scale(1.12) translateY(-14px); } }
-body.is-playing .stage-aura { opacity: 1; transform: scale(1.35); filter: blur(60px); }
+body.is-playing .stage-aura { opacity: 1; }
 
 .rings { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 1; }
 .ring {
@@ -268,9 +245,8 @@ body.is-playing .stage-aura { opacity: 1; transform: scale(1.35); filter: blur(6
   transform-style: preserve-3d;
   transform: rotateX(var(--rx)) rotateY(var(--ry)) translateZ(0);
   transition: transform 0.5s var(--ease-spring);
-  filter: drop-shadow(0 40px 60px rgba(0,0,0,0.55));
+  will-change: transform;
 }
-.card-tilt:hover { filter: drop-shadow(0 45px 70px rgba(0,0,0,0.65)); }
 @media (hover: none) {
   .card-tilt:active { scale: 0.97; }
 }
@@ -286,7 +262,7 @@ body.is-playing .card-flip { transform: rotateY(180deg) scale(1.035); }
   position: absolute; inset: 0; display: block; overflow: hidden;
   border-radius: 30px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
   background: #17141a; border: 1px solid rgba(255,255,255,0.16);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 24px 60px rgba(0,0,0,0.45);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 30px 60px rgba(0,0,0,0.55);
 }
 .face img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block; user-select: none; }
 .face-back { transform: rotateY(180deg); }
@@ -295,19 +271,11 @@ body.is-playing .card-flip { transform: rotateY(180deg) scale(1.035); }
   position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, transparent 30%, transparent 58%, rgba(0,0,0,0.62) 100%);
 }
-.face-sheen {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0;
-  background: radial-gradient(circle at var(--sx) var(--sy), rgba(255,255,255,0.34), transparent 46%);
-  transition: opacity 0.4s ease;
-  mix-blend-mode: screen;
-}
-.card-tilt:hover .face-sheen { opacity: 1; }
 .face-badge {
   position: absolute; top: 18px; left: 18px; z-index: 2;
   display: inline-flex; align-items: center; gap: 8px;
   padding: 8px 13px; border-radius: 100px;
-  background: rgba(10, 10, 14, 0.55); border: 1px solid rgba(255,255,255,0.16);
-  backdrop-filter: blur(14px);
+  background: rgba(14, 14, 19, 0.82); border: 1px solid rgba(255,255,255,0.16);
   font-size: 10px; font-weight: 800; letter-spacing: 0.18em; color: #f4f4f6;
 }
 .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #b9b9c2; }
@@ -337,22 +305,44 @@ body.is-playing .card-flip { transform: rotateY(180deg) scale(1.035); }
   100% { transform: translate(calc(-50% + var(--x, 0px)), calc(-50% + var(--y, -220px))) scale(1.25) rotate(calc(var(--rot, 0deg) + 40deg)); opacity: 0; }
 }
 
-.stage-caption {
-  display: flex; align-items: center; gap: 14px; margin-top: 30px; z-index: 3;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.17em; text-transform: uppercase;
-  color: var(--muted-2); transition: color 0.4s ease;
+/* Управление прямо под фото: не нужно листать к плееру */
+.stage-controls {
+  position: relative; z-index: 3; display: flex; align-items: center; gap: 12px;
+  width: clamp(280px, 30vw, 410px); margin-top: 18px; padding: 8px 12px 8px 8px;
+  border-radius: 18px; border: 1px solid var(--stroke);
+  background: rgba(22, 22, 29, 0.9);
 }
-body.is-playing .stage-caption { color: var(--accent-2); }
-.caption-rule { width: 46px; height: 1px; background: var(--stroke-strong); }
+.stage-play {
+  width: 44px; height: 44px; flex: none; border: 0; border-radius: 13px;
+  display: grid; place-items: center; cursor: pointer; font-size: 13px;
+  color: #1b0c06; background: linear-gradient(140deg, #ff9a6a, var(--accent));
+  box-shadow: 0 6px 18px rgba(255,106,69,0.3);
+  transition: transform 0.3s var(--ease-spring);
+}
+.stage-play:hover { transform: scale(1.05); }
+.stage-play:active { transform: scale(0.94); }
+.stage-play:focus-visible, .play-btn:focus-visible, .icon-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.stage-status { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.stage-status strong {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.stage-status span { font-size: 10px; color: var(--muted-2); }
+.stage-mode {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.14em;
+  padding: 6px 9px; border-radius: 8px; background: rgba(255,255,255,0.06); color: var(--muted);
+}
+body.is-playing .stage-mode { color: var(--accent-2); background: rgba(255,106,69,0.14); }
+body.is-playing .stage-status strong { color: var(--accent-2); }
 
 /* ---------- Плеер ---------- */
 .player {
-  max-width: 1180px; margin: 0 auto clamp(80px, 12vh, 150px);
-  padding: 30px clamp(22px, 3.4vw, 42px) 26px;
+  width: 100%; max-width: 560px; margin: 0;
+  padding: 26px clamp(22px, 3.4vw, 36px) 22px;
   border-radius: 30px; position: relative;
-  background: linear-gradient(150deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025));
-  border: 1px solid var(--stroke); backdrop-filter: blur(28px);
-  box-shadow: 0 30px 90px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.09);
+  background: linear-gradient(150deg, rgba(30, 30, 39, 0.94), rgba(19, 19, 25, 0.96));
+  border: 1px solid var(--stroke);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07);
   overflow: hidden;
 }
 .player::before {
@@ -373,17 +363,18 @@ body.is-playing .player-live { color: #ffd2bb; border-color: rgba(255,106,69,0.3
 body.is-playing .player-live i { background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: pulseDot 1s infinite; }
 
 .visualizer {
-  display: flex; align-items: flex-end; gap: 3px; height: 108px;
-  margin: 28px 0 22px; padding: 0 2px;
+  display: flex; align-items: flex-end; gap: 3px; height: 96px;
+  margin: 22px 0 16px; padding: 0 2px;
 }
 .visualizer .bar {
   flex: 1; min-width: 2px; border-radius: 4px 4px 2px 2px;
-  height: var(--h, 10%);
+  height: 100%; transform: scaleY(var(--h, 0.08)); transform-origin: bottom;
   background: linear-gradient(180deg, var(--accent-2), var(--accent) 55%, rgba(139,108,255,0.55));
-  opacity: 0.38;
-  transition: height 0.09s linear, opacity 0.4s ease;
+  opacity: 0.4;
+  transition: opacity 0.4s ease;
+  will-change: transform;
 }
-body.is-playing .visualizer .bar { opacity: 1; box-shadow: 0 0 14px rgba(255,106,69,0.25); }
+body.is-playing .visualizer .bar { opacity: 1; }
 
 .player-timeline { display: flex; align-items: center; gap: 14px; }
 .time { font-size: 11px; font-weight: 600; color: var(--muted-2); font-variant-numeric: tabular-nums; min-width: 36px; }
@@ -451,8 +442,8 @@ body.is-playing .visualizer .bar { opacity: 1; box-shadow: 0 0 14px rgba(255,106
 .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .feature {
   position: relative; padding: 30px; min-height: 240px; border-radius: 28px;
-  background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  border: 1px solid var(--stroke); backdrop-filter: blur(20px);
+  background: linear-gradient(160deg, rgba(30, 30, 39, 0.85), rgba(20, 20, 27, 0.9));
+  border: 1px solid var(--stroke);
   transition: transform 0.5s var(--ease-spring), border-color 0.4s ease, background 0.4s ease;
   overflow: hidden;
 }
@@ -498,9 +489,10 @@ body.is-playing .visualizer .bar { opacity: 1; box-shadow: 0 0 14px rgba(255,106
 
 /* ---------- Адаптив ---------- */
 @media (max-width: 980px) {
-  .hero { grid-template-columns: 1fr; padding-top: 30px; gap: 40px; min-height: auto; }
+  .hero { grid-template-columns: 1fr; padding-top: 30px; gap: 40px; }
   .hero-copy { order: 1; }
-  .stage { order: 2; min-height: 540px; }
+  .stage-column { order: 2; }
+  .stage { min-height: 500px; }
   .card-tilt { width: min(80vw, 380px); }
   .feature-grid { grid-template-columns: 1fr; }
   .feature { min-height: auto; }
@@ -516,8 +508,10 @@ body.is-playing .visualizer .bar { opacity: 1; box-shadow: 0 0 14px rgba(255,106
   .hero-hint { margin-top: 22px; font-size: 11px; }
   .stage { min-height: 500px; }
   .card-tilt { width: min(86vw, 360px); }
-  .stage-caption { font-size: 10px; letter-spacing: 0.1em; gap: 8px; }
-  .caption-rule { width: 24px; }
+  .stage-controls { width: min(86vw, 360px); gap: 10px; padding: 6px 10px 6px 6px; margin-top: 14px; }
+  .stage-play { width: 44px; height: 44px; }
+  .stage-status strong { font-size: 10px; }
+  .stage-status span { font-size: 9px; }
   .player { padding: 22px 18px calc(22px + env(safe-area-inset-bottom)); border-radius: 24px; }
   .player-head { gap: 12px; }
   .player-title { font-size: 18px; }
@@ -536,7 +530,7 @@ body.is-playing .visualizer .bar { opacity: 1; box-shadow: 0 0 14px rgba(255,106
   }
 }
 @media (max-width: 380px) {
-  .card-tilt { width: min(88vw, 320px); }
+  .card-tilt, .stage-controls { width: min(88vw, 320px); }
   .player-foot-text { display: none; }
   .player-foot { justify-content: space-between; }
 }
