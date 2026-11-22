@@ -1,6 +1,6 @@
 /* ============================================================
-   ТАМИК — SOUND EDITION
-   Один экран. Переход — готовое видео. Панели вытекают из кнопок.
+   ГОЛОС В КАДРЕ
+   Переход — снятое видео. Панели вытекают из точки нажатия.
    ============================================================ */
 
 (() => {
@@ -12,6 +12,7 @@
   const tamicStill = $('tamicStill');
   const tamicVideo = $('tamicVideo');
   const playerToggle = $('playerToggle');
+  const playerWrap = $('playerWrap');
   const player = $('player');
   const playBtn = $('playBtn');
   const playIcon = $('playIcon');
@@ -19,6 +20,7 @@
   const gearBtn = $('gearBtn');
   const gearIcon = $('gearIcon');
   const soundMenu = $('soundMenu');
+  const speedRow = $('speedRow');
   const soundFile = $('soundFile');
   const soundReset = $('soundReset');
   const soundName = $('soundName');
@@ -31,7 +33,6 @@
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const DEFAULT_SRC = 'assets/tamic-voice.mp3';
-
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
@@ -44,6 +45,8 @@
   let playerOpen = false;
   let soundOpen = false;
   let animTimer = null;
+  let speechTimer = null;
+  let returnTimer = null;
   let audioCtx = null;
   let analyser = null;
   let freqData = null;
@@ -68,19 +71,14 @@
     const on = audioOn();
     document.body.classList.toggle('tamic-on', tamicOn);
     document.body.classList.toggle('audio-on', on);
-
     tamicFrame.setAttribute('aria-pressed', String(tamicOn));
-    tamicFrame.setAttribute('aria-label', tamicOn
-      ? 'Тамик в музыкальном режиме — нажмите, чтобы вернуть обычный'
-      : 'Нажмите, чтобы переключить Тамика в музыкальный режим');
-
     playBtn.setAttribute('aria-pressed', String(on));
     playBtn.setAttribute('aria-label', on ? 'Пауза' : 'Включить звук');
     playIcon.innerHTML = on ? ICONS.pause : ICONS.play;
     playLabel.textContent = on ? 'Пауза' : 'Включить звук';
   }
 
-  /* ---------- Переход Тамика: заранее закодированное видео ---------- */
+  /* ---------- Переход кадра ---------- */
   function animateTamic(on) {
     const src = on ? 'assets/tamic-on.mp4' : 'assets/tamic-off.mp4';
     const still = on ? 'assets/tamic-music-card.jpg' : 'assets/tamic-calm-card.jpg';
@@ -104,8 +102,7 @@
     tamicVideo.currentTime = 0;
     const p = tamicVideo.play();
     if (p && typeof p.catch === 'function') p.catch(finish);
-    // Страховка: если видео не сработало, просто покажем конечный кадр.
-    animTimer = setTimeout(finish, 1400);
+    animTimer = setTimeout(finish, 1600);
   }
 
   /* ---------- Звук ---------- */
@@ -123,9 +120,7 @@
       source.connect(analyser);
       analyser.connect(audioCtx.destination);
       freqData = new Uint8Array(analyser.frequencyBinCount);
-    } catch (err) {
-      analyser = null;
-    }
+    } catch (err) { analyser = null; }
   }
   function resumeContext() {
     initAudioGraph();
@@ -133,13 +128,17 @@
   }
 
   function toggleTamic() {
+    clearTimeout(speechTimer);
+    clearTimeout(returnTimer);
     tamicOn = !tamicOn;
     animateTamic(tamicOn);
     resumeContext();
+
     if (tamicOn) {
       audio.pause();
       audio.currentTime = 0;
-      audio.play().catch(() => {});
+      // Кадр меняется раньше — голос вступает после переворота.
+      speechTimer = setTimeout(() => { if (tamicOn) audio.play().catch(() => {}); }, 460);
     } else {
       audio.pause();
       audio.currentTime = 0;
@@ -150,9 +149,8 @@
 
   function toggleAudio() {
     resumeContext();
-    if (audioOn()) {
-      audio.pause();
-    } else {
+    if (audioOn()) audio.pause();
+    else {
       if (audio.ended || (audio.duration && audio.currentTime >= audio.duration - 0.05)) audio.currentTime = 0;
       audio.play().catch(() => {});
     }
@@ -167,8 +165,8 @@
   audio.addEventListener('ended', () => {
     updateUI();
     if (tamicOn) {
-      // Тамик остаётся музыкальным мгновение — потом мягко возвращается.
-      setTimeout(() => { if (tamicOn && audio.ended) toggleTamic(); }, 900);
+      // Возврат — позже, чем закончилась фраза.
+      returnTimer = setTimeout(() => { if (tamicOn && audio.ended) toggleTamic(); }, 900);
     }
   });
   audio.addEventListener('loadedmetadata', () => {
@@ -178,15 +176,32 @@
   audio.addEventListener('timeupdate', updateProgress);
   audio.addEventListener('seeked', updateProgress);
 
-  /* ---------- Панели ---------- */
-  function setPlayer(open) {
+  /* ---------- Genie-открытие: источник — точка нажатия ---------- */
+  function setOrigin(el, event, fallbackEl, fromTop, prefix) {
+    const px = prefix ? `--${prefix}x` : '--ox';
+    const py = prefix ? `--${prefix}y` : '--oy';
+    if (event && typeof event.clientX === 'number') {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty(px, `${clamp(event.clientX - r.left, 0, r.width)}px`);
+      el.style.setProperty(py, `${clamp(event.clientY - r.top, 0, Math.max(r.height, 40))}px`);
+    } else if (fallbackEl) {
+      const r = fallbackEl.getBoundingClientRect();
+      el.style.setProperty(px, `${r.width / 2}px`);
+      el.style.setProperty(py, fromTop ? '0px' : `${r.height / 2}px`);
+    }
+  }
+
+  function setPlayer(open, event) {
+    setOrigin(player, event, playerToggle, true);
     playerOpen = open;
-    player.classList.toggle('open', open);
+    playerWrap.classList.toggle('open', open);
     player.setAttribute('aria-hidden', String(!open));
     playerToggle.setAttribute('aria-expanded', String(open));
     if (!open) setSound(false);
   }
-  function setSound(open) {
+
+  function setSound(open, event) {
+    if (open) setOrigin(soundMenu, event, gearBtn, false, 'm');
     soundOpen = open;
     soundMenu.classList.toggle('open', open);
     soundMenu.setAttribute('aria-hidden', String(!open));
@@ -195,11 +210,11 @@
     gearIcon.textContent = open ? '×' : '⚙';
   }
 
-  playerToggle.addEventListener('click', () => setPlayer(!playerOpen));
-  gearBtn.addEventListener('click', (e) => { e.stopPropagation(); setSound(!soundOpen); });
+  playerToggle.addEventListener('click', (e) => setPlayer(!playerOpen, e));
+  gearBtn.addEventListener('click', (e) => { e.stopPropagation(); setSound(!soundOpen, e); });
 
   document.addEventListener('click', (e) => {
-    if (soundOpen && !soundMenu.contains(e.target) && e.target !== gearBtn) setSound(false);
+    if (soundOpen && !soundMenu.contains(e.target) && e.target !== gearBtn && !gearBtn.contains(e.target)) setSound(false);
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
@@ -207,18 +222,24 @@
     else if (playerOpen) setPlayer(false);
   });
 
-  /* ---------- Замена звука ---------- */
-  function releaseCustom() {
-    if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
-  }
+  /* ---------- Скорость и замена звука ---------- */
+  speedRow.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-speed]');
+    if (!btn) return;
+    audio.playbackRate = parseFloat(btn.dataset.speed);
+    speedRow.querySelectorAll('button').forEach((b) => b.classList.toggle('active', b === btn));
+  });
+
+  function releaseCustom() { if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; } }
   function loadSource(src, label) {
     releaseCustom();
     if (src.startsWith('blob:')) objectUrl = src;
     audio.pause();
+    clearTimeout(speechTimer);
     audio.src = src;
     audio.load();
     audio.currentTime = 0;
-    if (tamicOn) toggleTamic();
+    if (tamicOn) { clearTimeout(returnTimer); tamicOn = false; animateTamic(false); }
     soundName.textContent = `Сейчас: ${label}`;
     durationEl.textContent = '0:00';
     updateProgress();
@@ -231,7 +252,7 @@
     loadSource(URL.createObjectURL(file), file.name);
     e.target.value = '';
   });
-  soundReset.addEventListener('click', () => loadSource(DEFAULT_SRC, 'голос Тамика'));
+  soundReset.addEventListener('click', () => loadSource(DEFAULT_SRC, 'голос в кадре'));
 
   /* ---------- Перемотка ---------- */
   function seekTo(clientX) {
@@ -271,7 +292,7 @@
     updateProgress();
   });
 
-  /* ---------- Визуализация по реальному звуку ---------- */
+  /* ---------- Визуализация ---------- */
   const BAR_COUNT = 36;
   const bars = [];
   const heights = new Array(BAR_COUNT).fill(0.08);
@@ -281,7 +302,6 @@
     visualizer.appendChild(bar);
     bars.push(bar);
   }
-
   function updateVisualizer(t) {
     const on = audioOn();
     if (on && analyser && freqData) {
@@ -303,11 +323,8 @@
         heights[i] = lerp(heights[i], idle, 0.12);
       }
     }
-    for (let i = 0; i < BAR_COUNT; i++) {
-      bars[i].style.setProperty('--h', clamp(heights[i], 0.03, 1).toFixed(3));
-    }
+    for (let i = 0; i < BAR_COUNT; i++) bars[i].style.setProperty('--h', clamp(heights[i], 0.03, 1).toFixed(3));
   }
-
   let lastVisual = 0;
   function frame(t) {
     if (document.hidden) { requestAnimationFrame(frame); return; }
@@ -316,7 +333,6 @@
   }
   requestAnimationFrame(frame);
 
-  /* ---------- Старт ---------- */
   if (Number.isFinite(audio.duration)) durationEl.textContent = formatTime(audio.duration);
   updateUI();
   updateProgress();
