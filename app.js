@@ -13,7 +13,7 @@
   const player = $('player');
   const playStack = $('playStack'), playBtn = $('playBtn'), pauseBtn = $('pauseBtn');
   const gearBtn = $('gearBtn'), gearIcon = $('gearIcon'), soundMenu = $('soundMenu');
-  const speedRow = $('speedRow'), soundFile = $('soundFile'), soundReset = $('soundReset'), soundName = $('soundName');
+  const speedRow = $('speedRow'), soundFile = $('soundFile'), soundReset = $('soundReset');
   const progress = $('progress'), progressFill = $('progressFill'), timeEl = $('time'), durationEl = $('duration');
   const visualizer = $('visualizer'), audio = $('audio'), toastEl = $('toast');
 
@@ -126,7 +126,7 @@
   audio.addEventListener('pause', updateUI);
   audio.addEventListener('ended', () => {
     updateUI();
-    if (tamicOn) returnTimer = setTimeout(() => { if (tamicOn && audio.ended) toggleTamic(); }, 900);
+    if (tamicOn) returnTimer = setTimeout(() => { if (tamicOn && audio.ended) toggleTamic(); }, 150);
   });
   audio.addEventListener('loadedmetadata', () => { durationEl.textContent = formatTime(audio.duration); updateProgress(); });
   audio.addEventListener('timeupdate', updateProgress);
@@ -157,6 +157,7 @@
     if (open) setOrigin(soundMenu, event, gearBtn, false, 'm');
     soundOpen = open;
     soundMenu.classList.toggle('open', open);
+    player.classList.toggle('is-settings', open);
     soundMenu.setAttribute('aria-hidden', String(!open));
     gearBtn.setAttribute('aria-expanded', String(open));
     gearBtn.setAttribute('aria-label', open ? 'Закрыть настройки плеера' : 'Настройки плеера');
@@ -186,7 +187,6 @@
     audio.pause(); clearTimeout(speechTimer);
     audio.src = src; audio.load(); audio.currentTime = 0;
     if (tamicOn) { clearTimeout(returnTimer); tamicOn = false; animateTamic(false); }
-    soundName.textContent = `Сейчас: ${label}`;
     soundReset.hidden = !isCustom;
     durationEl.textContent = '0:00';
     updateProgress(); updateUI(); setSound(false);
@@ -264,6 +264,29 @@
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  /* ---------- Подстройка под любой размер окна ---------- */
+  const introEl = document.querySelector('.intro');
+  const navEl = document.querySelector('.nav');
+  function fitStage() {
+    const w = innerWidth, h = innerHeight;
+    document.documentElement.style.setProperty('--win-h', `${h}px`);
+    if (w <= 700) {
+      const navH = navEl.getBoundingClientRect().height;
+      const introH = introEl.getBoundingClientRect().height;
+      const reserved = navH + introH + 86 + (w < 400 ? 185 : 215);
+      const available = Math.max(150, h - reserved);
+      const card = Math.max(170, Math.min(w * 0.58, available * 0.75, 270));
+      stage.style.setProperty('--card-base', `${Math.round(card)}px`);
+      stage.style.setProperty('--card-small', `${Math.round(Math.min(w * 0.42, card * 0.62))}px`);
+    } else {
+      stage.style.removeProperty('--card-base');
+      stage.style.removeProperty('--card-small');
+    }
+  }
+  fitStage();
+  addEventListener('resize', fitStage, { passive: true });
+  addEventListener('orientationchange', fitStage, { passive: true });
 
   if (Number.isFinite(audio.duration)) durationEl.textContent = formatTime(audio.duration);
   updateUI(); updateProgress();
