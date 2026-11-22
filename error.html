@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Что-то пошло не так — Тамик</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23ff6a45'/%3E%3Cg fill='%23221009'%3E%3Crect x='16' y='24' width='6' height='16' rx='3'/%3E%3Crect x='27' y='18' width='6' height='28' rx='3'/%3E%3Crect x='38' y='22' width='6' height='20' rx='3'/%3E%3C/g%3E%3C/svg%3E" />
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:#08080b;color:#f5f5f7;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;display:flex;flex-direction:column}
+.bg{position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 10%,rgba(255,106,69,.24),transparent 45%),radial-gradient(circle at 85% 80%,rgba(139,108,255,.18),transparent 50%)}
+.nav{flex:none;height:66px;display:flex;align-items:center;padding:0 clamp(18px,5vw,72px);position:relative;z-index:2}
+.brand{display:inline-flex;align-items:center;gap:12px}
+.brand-mark{width:34px;height:34px;border-radius:12px;background:linear-gradient(140deg,#ff6a45,#ffb35c);display:flex;align-items:center;justify-content:center;gap:3px;box-shadow:0 6px 24px rgba(255,106,69,.28)}
+.brand-mark i{width:3px;border-radius:3px;background:#221009}.brand-mark i:nth-child(1){height:9px}.brand-mark i:nth-child(2){height:16px}.brand-mark i:nth-child(3){height:12px}.brand-mark i:nth-child(4){height:14px}
+.brand-name{font-weight:800;font-size:15px;letter-spacing:.16em}.brand-name span{font-size:9px;vertical-align:super;color:#9797a3}
+main{flex:1;display:grid;place-items:center;padding:0 24px 8vh;position:relative;z-index:2;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#9797a3;margin-bottom:24px}
+.eyebrow-dot{width:8px;height:8px;border-radius:50%;background:#ff6a45;box-shadow:0 0 0 5px rgba(255,106,69,.12),0 0 18px #ff6a45}
+.code{font-size:clamp(70px,16vw,140px);font-weight:900;line-height:1;letter-spacing:-.08em;background:linear-gradient(100deg,#ff6a45,#ffb35c 45%,#fff2d6 75%);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{margin:12px 0 14px;font-size:clamp(26px,5vw,48px);letter-spacing:-.04em}
+p{margin:0;color:#9797a3;font-size:15px;line-height:1.65;max-width:520px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}
+a.min{min-height:50px;display:inline-flex;align-items:center;gap:8px;padding:0 20px;border-radius:18px;font-size:13px;font-weight:700;text-decoration:none;color:#1b0c06;background:linear-gradient(120deg,#ff8a5c,#ff6a45 55%,#ff9a6a);box-shadow:0 12px 28px rgba(255,106,69,.26)}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<header class="nav"><div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-name">ТАМИК<span>™</span></span></div></header>
+<main>
+  <div>
+    <div class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>сделано с любовью к деталям</div>
+    <div class="code">500</div>
+    <h1>Звук не нашёлся</h1>
+    <p>Кажется, кадр не успел заговорить. Попробуй ещё раз — всё вернётся на свои места.</p>
+    <div class="actions"><a class="min" href="/tamic/">На главную ↗</a></div>
+  </div>
+</main>
+</body>
+</html>
