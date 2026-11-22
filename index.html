@@ -20,8 +20,6 @@
     <div class="grid"></div>
     <div class="grain"></div>
   </div>
-  <div class="cursor-halo" id="cursorHalo" aria-hidden="true"></div>
-
   <header class="nav">
     <a class="brand" href="#top" aria-label="Тамик — наверх">
       <span class="brand-mark" aria-hidden="true">
@@ -73,7 +71,8 @@
         </div>
       </div>
 
-      <div class="stage reveal" id="stage">
+      <div class="stage-column">
+        <div class="stage reveal" id="stage">
         <div class="stage-aura" aria-hidden="true"></div>
         <div class="rings" id="rings" aria-hidden="true">
           <span class="ring"></span><span class="ring"></span><span class="ring"></span>
@@ -83,16 +82,14 @@
                 aria-label="Нажмите, чтобы переключить Тамика в музыкальный режим">
           <span class="card-flip">
             <span class="face face-front">
-              <img src="assets/tamic-calm.jpg" alt="Обычный Тамик" draggable="false" />
+              <img src="assets/tamic-calm-card.jpg" alt="Обычный Тамик" draggable="false" />
               <span class="face-scrim" aria-hidden="true"></span>
-              <span class="face-sheen" aria-hidden="true"></span>
               <span class="face-badge"><i class="badge-dot" aria-hidden="true"></i> IDLE</span>
               <span class="face-caption">обычный режим</span>
             </span>
             <span class="face face-back">
               <img src="assets/tamic-music.jpg" alt="Музыкальный Тамик" draggable="false" />
               <span class="face-scrim" aria-hidden="true"></span>
-              <span class="face-sheen" aria-hidden="true"></span>
               <span class="face-badge badge-live"><i class="badge-dot" aria-hidden="true"></i> PLAYING</span>
               <span class="face-caption">музыкальный режим</span>
             </span>
@@ -102,15 +99,19 @@
 
         <div class="notes" id="notes" aria-hidden="true"></div>
 
-        <div class="stage-caption">
-          <span class="caption-rule" aria-hidden="true"></span>
-          <span id="stageCaption">нажми, чтобы разбудить</span>
-          <span class="caption-rule" aria-hidden="true"></span>
+        <div class="stage-controls">
+          <button class="stage-play" id="stagePlay" type="button" aria-label="Включить звук" aria-pressed="false">
+            <span id="stagePlayIcon" aria-hidden="true">▶</span>
+          </button>
+          <div class="stage-status">
+            <strong id="stageCaption">нажми, чтобы разбудить</strong>
+            <span>или нажми на фото Тамика</span>
+          </div>
+          <span class="stage-mode" id="stageMode">IDLE</span>
         </div>
-      </div>
-    </section>
+        </div>
 
-    <section class="player reveal" id="player" aria-label="Аудиоплеер">
+        <section class="player reveal" id="player" aria-label="Аудиоплеер">
       <div class="player-head">
         <div>
           <span class="player-kicker">СЕЙЧАС ИГРАЕТ</span>
@@ -147,6 +148,8 @@
       </div>
 
       <audio id="audio" src="assets/tamic.mp3" preload="metadata" playsinline webkit-playsinline></audio>
+        </section>
+      </div>
     </section>
 
     <section class="features" id="how">
