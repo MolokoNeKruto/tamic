@@ -2,123 +2,108 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#08080b" />
-  <meta name="description" content="Обычный портрет, в котором живёт ещё одно состояние человека. Прикосновение — и кадр обретает голос. Это место, где фотография отвечает." />
-  <title>Голос в кадре — звуковой режим</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23ff6a45'/%3E%3Cg fill='%23221009'%3E%3Crect x='16' y='26' width='6' height='12' rx='3'/%3E%3Crect x='27' y='20' width='6' height='24' rx='3'/%3E%3Crect x='38' y='24' width='6' height='16' rx='3'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <meta name="description" content="Тамик — обычный до нажатия, музыкальный после. Интерактивный 3D-опыт со звуком." />
+  <title>Тамик — звуковой режим</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23ff6a45'/%3E%3Cg fill='%23221009'%3E%3Crect x='16' y='24' width='6' height='16' rx='3'/%3E%3Crect x='27' y='18' width='6' height='28' rx='3'/%3E%3Crect x='38' y='22' width='6' height='20' rx='3'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="preload" as="image" href="assets/tamic-calm-card.jpg" />
   <link rel="preload" as="video" href="assets/tamic-on.mp4" type="video/mp4" />
-  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="stylesheet" href="styles.css?v=8" />
 </head>
 <body>
   <div class="background" aria-hidden="true">
-    <div class="mesh mesh-1"></div>
-    <div class="mesh mesh-2"></div>
-    <div class="mesh mesh-3"></div>
-    <div class="grid"></div>
-    <div class="grain"></div>
+    <div class="mesh mesh-1"></div><div class="mesh mesh-2"></div><div class="mesh mesh-3"></div>
+    <div class="grid"></div><div class="grain"></div>
   </div>
 
   <div class="app">
     <header class="nav">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-        <span class="brand-name">ГОЛОС<span>В КАДРЕ</span></span>
+        <span class="brand-name">ТАМИК<span>™</span></span>
       </div>
-      <a class="author-link" href="https://t.me/DornegE" target="_blank" rel="noopener noreferrer"
-         aria-label="Автор проекта в Телеграме">@DornegE <span aria-hidden="true">↗</span></a>
     </header>
 
     <main class="screen">
       <section class="intro">
-        <div class="eyebrow">
-          <span class="eyebrow-dot" aria-hidden="true"></span>
-          сделано с любовью к деталям
-        </div>
+        <div class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>сделано с любовью к деталям</div>
 
         <h1 class="hero-title">
-          <span class="title-line">Голос</span>
-          <span class="title-line">в кадре<span class="accent-dot">.</span></span>
-          <span class="title-line title-line--gradient">Ответь ему</span>
+          <span class="title-line">Обычный</span>
+          <span class="title-line">Тамик<span class="accent-dot">.</span></span>
+          <span class="title-line title-line--gradient">Музыкальный</span>
         </h1>
 
         <p class="hero-text">
-          Обычный портрет, в котором живёт ещё одно состояние человека.
-          Прикосновение — и кадр обретает голос, переставая быть просто изображением.
+          На вид — обычный человек. Но внутри него живёт звук.<br />
+          Нажми на карточку: Тамик переключится в музыкальный<br />
+          режим и произнесёт то, что записано в этом MP3-файле.
         </p>
 
-        <p class="hero-lore">
-          В каждом кадре спит голос, который ждёт своего часа.<br />
-          Прикосновение снимает с него тишину — и человек заговаривает.<br />
-          Так начинается серия: кадр за кадром, голос за голосом.<br />
-          Скоро среди них будет и твой человек.
-        </p>
-
-        <a class="site-link" href="https://molokonekruto.github.io/tamic/">molokonekruto.github.io/tamic/</a>
+        <div class="author-list" aria-label="Автор и репозиторий">
+          <a class="author-chip" href="https://t.me/DornegE" target="_blank" rel="noopener noreferrer" aria-label="Автор в Телеграме">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 20c-.2 1-.8 1.3-1.7.8l-4.7-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.4-5.6 9.4-8.5c.4-.4-.1-.6-.6-.3L7.6 12.8 2.3 11c-1-.3-1-1 .2-1.5l18-6.9c.8-.3 1.5.2 1.4 1.7Z"/></svg>
+            <span>@DornegE</span><span aria-hidden="true">↗</span>
+          </a>
+          <a class="author-chip" href="https://github.com/MolokoNeKruto" target="_blank" rel="noopener noreferrer" aria-label="Репозиторий на GitHub">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.4 6.8 9.7.5.1.7-.2.7-.5v-1.9c-2.8.6-3.4-1.2-3.4-1.2-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.7-1.4-2.3-.3-4.7-1.2-4.7-5.2 0-1.2.4-2.1 1-2.8-.1-.3-.4-1.3.1-2.7 0 0 .9-.3 2.8 1a9.5 9.5 0 0 1 5 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.8 0 4-2.4 4.9-4.7 5.2.4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.2 10.2 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg>
+            <span>MolokoNeKruto</span><span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </section>
 
       <section class="stage" id="stage">
         <div class="stage-aura" aria-hidden="true"></div>
 
-        <button class="tamic-frame" id="tamicFrame" type="button" aria-pressed="false"
-                aria-label="Нажмите, чтобы кадр заговорил">
-          <img class="tamic-still" id="tamicStill" src="assets/tamic-calm-card.jpg" alt="Каждый кадр хранит голос" draggable="false" />
+        <button class="tamic-frame" id="tamicFrame" type="button" aria-pressed="false" aria-label="Нажмите, чтобы переключить Тамика в музыкальный режим">
+          <img class="tamic-still" id="tamicStill" src="assets/tamic-calm-card.jpg" alt="Обычный Тамик" draggable="false" />
           <video class="tamic-video" id="tamicVideo" src="assets/tamic-on.mp4" muted playsinline preload="auto"></video>
         </button>
 
         <button class="player-toggle" id="playerToggle" type="button" aria-expanded="false" aria-controls="player">
-          <span class="player-toggle-icon" aria-hidden="true">♫</span>
-          <span>Плеер</span>
-          <span class="player-toggle-arrow" aria-hidden="true">›</span>
+          <span class="player-toggle-icon" aria-hidden="true">♫</span><span>Плеер</span><span class="player-toggle-arrow" aria-hidden="true">›</span>
         </button>
 
         <div class="player-wrap" id="playerWrap">
           <section class="player" id="player" aria-label="Аудиоплеер" aria-hidden="true">
             <div class="player-head">
               <span class="player-kicker">СЕЙЧАС ИГРАЕТ</span>
-              <h2 class="player-title">Голос в кадре</h2>
+              <h2 class="player-title" id="playerTitle">Тамик</h2>
             </div>
 
             <div class="visualizer" id="visualizer" aria-hidden="true"></div>
 
             <div class="player-timeline">
               <span class="time" id="time">0:00</span>
-              <div class="progress" id="progress" role="slider" tabindex="0"
-                   aria-label="Позиция воспроизведения" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress" id="progress" role="slider" tabindex="0" aria-label="Позиция воспроизведения" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                 <span class="progress-track"><span class="progress-fill" id="progressFill"></span></span>
               </div>
               <span class="time" id="duration">0:00</span>
             </div>
 
             <div class="player-foot">
-              <button class="btn btn-primary play-btn" id="playBtn" type="button" aria-pressed="false">
-                <span class="btn-symbol" id="playIcon" aria-hidden="true">▶</span>
-                <span id="playLabel">Включить звук</span>
-              </button>
-              <button class="icon-btn gear-btn" id="gearBtn" type="button" aria-label="Настройки звука"
-                      aria-expanded="false" aria-controls="soundMenu">
-                <span id="gearIcon" aria-hidden="true">⚙</span>
-              </button>
+              <div class="play-stack" id="playStack">
+                <button class="btn btn-primary play-state play-on" id="playBtn" type="button" aria-pressed="false"><span class="btn-symbol" aria-hidden="true">▶</span><span>Включить звук</span></button>
+                <button class="btn btn-primary play-state play-off" id="pauseBtn" type="button" aria-label="Пауза"><span class="btn-symbol" aria-hidden="true">Ⅱ</span><span>Пауза</span></button>
+              </div>
+              <button class="icon-btn gear-btn" id="gearBtn" type="button" aria-label="Настройки плеера" aria-expanded="false" aria-controls="soundMenu"><span id="gearIcon" aria-hidden="true">⚙</span></button>
             </div>
 
             <div class="sound-menu" id="soundMenu" aria-hidden="true">
               <strong class="sound-menu-title">Звук</strong>
-
-              <div class="speed-row" id="speedRow" aria-label="Скорость воспроизведения">
-                <button type="button" data-speed="0.5">0,5×</button>
-                <button type="button" data-speed="1" class="active">1×</button>
-                <button type="button" data-speed="1.5">1,5×</button>
-                <button type="button" data-speed="2">2×</button>
+              <div class="field">
+                <label class="file-btn small" for="soundFile">Выбрать аудиофайл</label>
+                <input type="file" id="soundFile" accept="audio/*" hidden />
+                <button class="sound-reset" id="soundReset" type="button" hidden>Вернуть оригинальный звук</button>
               </div>
-
-              <label class="file-btn" for="soundFile">Выбрать аудиофайл</label>
-              <input type="file" id="soundFile" accept="audio/*" hidden />
-              <button class="sound-reset" id="soundReset" type="button">Вернуть оригинальный звук</button>
-              <span class="sound-name" id="soundName">Сейчас: голос в кадре</span>
+              <div class="field">
+                <span class="field-label">Скорость</span>
+                <div class="speed-row" id="speedRow">
+                  <button type="button" data-speed="0.5">0,5×</button><button type="button" data-speed="1" class="active">1×</button><button type="button" data-speed="1.5">1,5×</button><button type="button" data-speed="2">2×</button>
+                </div>
+              </div>
+              <span class="sound-name" id="soundName">Сейчас: Тамик</span>
             </div>
 
             <audio id="audio" src="assets/tamic-voice.mp3" preload="metadata" playsinline webkit-playsinline></audio>
@@ -128,6 +113,7 @@
     </main>
   </div>
 
-  <script src="app.js?v=4" defer></script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js?v=8" defer></script>
 </body>
 </html>
