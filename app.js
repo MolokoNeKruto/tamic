@@ -14,6 +14,9 @@
   const primarySymbol = $('primarySymbol');
   const navStatus = $('navStatus');
   const stageCaption = $('stageCaption');
+  const stagePlay = $('stagePlay');
+  const stagePlayIcon = $('stagePlayIcon');
+  const stageMode = $('stageMode');
   const playerLive = $('playerLive');
   const audio = $('audio');
   const timeEl = $('time');
@@ -29,7 +32,6 @@
   const visualizer = $('visualizer');
   const notesHost = $('notes');
   const ringsHost = $('rings');
-  const halo = $('cursorHalo');
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -96,10 +98,10 @@
     }
   }
 
-  /* ---------- Визуализатор ---------- */
-  const BAR_COUNT = 56;
+  /* ---------- Визуализатор (трансforms вместо layout) ---------- */
+  const BAR_COUNT = 36;
   const bars = [];
-  const barHeights = new Array(BAR_COUNT).fill(10);
+  const barHeights = new Array(BAR_COUNT).fill(0.08);
 
   for (let i = 0; i < BAR_COUNT; i++) {
     const bar = document.createElement('span');
@@ -114,52 +116,45 @@
       for (let i = 0; i < BAR_COUNT; i++) {
         const idx = Math.floor(Math.pow(i / BAR_COUNT, 1.25) * freqData.length * 0.75);
         const value = freqData[idx] / 255;
-        const target = 7 + value * 93;
+        const target = 0.04 + value * 0.96;
         barHeights[i] = lerp(barHeights[i], target, 0.38);
       }
     } else if (playing) {
       for (let i = 0; i < BAR_COUNT; i++) {
         const wave = Math.sin(t / 160 + i * 0.45) * 0.5 + 0.5;
         const jitter = Math.sin(t / 70 + i * 1.7) * 0.18;
-        const target = 12 + (wave + jitter) * 72;
+        const target = 0.12 + (wave + jitter) * 0.72;
         barHeights[i] = lerp(barHeights[i], target, 0.22);
       }
     } else {
       for (let i = 0; i < BAR_COUNT; i++) {
-        const idle = 8 + 5 * Math.sin(t / 700 + i * 0.32) + 3 * Math.sin(t / 1200 + i * 0.11);
+        const idle = 0.08 + 0.05 * Math.sin(t / 700 + i * 0.32) + 0.03 * Math.sin(t / 1200 + i * 0.11);
         barHeights[i] = lerp(barHeights[i], idle, 0.12);
       }
     }
     for (let i = 0; i < BAR_COUNT; i++) {
-      bars[i].style.setProperty('--h', `${clamp(barHeights[i], 4, 100).toFixed(1)}%`);
+      bars[i].style.setProperty('--h', clamp(barHeights[i], 0.03, 1).toFixed(3));
     }
   }
 
-  /* ---------- 3D-наклон карточки и курсор ---------- */
+  /* ---------- 3D-наклон карточки ---------- */
   let targetRX = 0, targetRY = 0, currentRX = 0, currentRY = 0;
-  let pointerX = window.innerWidth / 2, pointerY = window.innerHeight / 2;
-  let haloX = pointerX, haloY = pointerY;
+  let tiltSettled = true;
 
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     stage.addEventListener('pointermove', (event) => {
       const rect = card.getBoundingClientRect();
       const px = clamp((event.clientX - rect.left) / rect.width - 0.5, -0.5, 0.5);
       const py = clamp((event.clientY - rect.top) / rect.height - 0.5, -0.5, 0.5);
-      targetRY = px * 16;
-      targetRX = -py * 13;
-      card.style.setProperty('--sx', `${(px + 0.5) * 100}%`);
-      card.style.setProperty('--sy', `${(py + 0.5) * 100}%`);
-    });
+      targetRY = px * 14;
+      targetRX = -py * 11;
+      tiltSettled = false;
+    }, { passive: true });
     stage.addEventListener('pointerleave', () => {
       targetRX = 0;
       targetRY = 0;
+      tiltSettled = false;
     });
-
-    window.addEventListener('pointermove', (event) => {
-      pointerX = event.clientX;
-      pointerY = event.clientY;
-      document.body.classList.add('has-pointer');
-    }, { passive: true });
   }
 
   /* ---------- Анимации-взрывы ---------- */
@@ -168,7 +163,7 @@
 
   function spawnNotes() {
     if (reduceMotion) return;
-    const count = 16;
+    const count = 10;
     for (let i = 0; i < count; i++) {
       const note = document.createElement('span');
       note.className = 'note';
@@ -217,6 +212,10 @@
     primarySymbol.textContent = playing ? '■' : '▶';
     navStatus.textContent = playing ? 'играет' : 'ожидание';
     stageCaption.textContent = playing ? 'Тамик в музыкальном режиме' : 'нажми, чтобы разбудить';
+    stagePlayIcon.innerHTML = playing ? ICONS.stop : ICONS.play;
+    stagePlay.setAttribute('aria-pressed', String(playing));
+    stagePlay.setAttribute('aria-label', playing ? 'Остановить звук' : 'Включить звук');
+    stageMode.textContent = playing ? 'LIVE' : 'IDLE';
     playerLive.lastChild.textContent = playing ? ' звук идёт' : ' звук выключен';
     playBtn.setAttribute('aria-pressed', String(playing));
     playBtn.setAttribute('aria-label', playing ? 'Остановить звук' : 'Включить звук');
@@ -281,6 +280,7 @@
 
   card.addEventListener('click', toggle);
   primaryBtn.addEventListener('click', toggle);
+  stagePlay.addEventListener('click', toggle);
   playBtn.addEventListener('click', toggle);
   stopBtn.addEventListener('click', replay);
   muteBtn.addEventListener('click', toggleMute);
@@ -346,20 +346,28 @@
   document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
   /* ---------- Главный цикл ---------- */
+  let lastVisual = 0;
   function frame(t) {
-    if (!reduceMotion) {
-      currentRX = lerp(currentRX, targetRX, 0.09);
-      currentRY = lerp(currentRY, targetRY, 0.09);
+    if (document.hidden) { requestAnimationFrame(frame); return; }
+
+    // Наклон обновляем только пока он реально меняется.
+    if (!reduceMotion && !tiltSettled) {
+      currentRX = lerp(currentRX, targetRX, 0.12);
+      currentRY = lerp(currentRY, targetRY, 0.12);
+      if (Math.abs(currentRX - targetRX) < 0.06 && Math.abs(currentRY - targetRY) < 0.06) {
+        currentRX = targetRX;
+        currentRY = targetRY;
+        tiltSettled = true;
+      }
       card.style.setProperty('--rx', `${currentRX.toFixed(2)}deg`);
       card.style.setProperty('--ry', `${currentRY.toFixed(2)}deg`);
-
-      if (document.body.classList.contains('has-pointer')) {
-        haloX = lerp(haloX, pointerX, 0.12);
-        haloY = lerp(haloY, pointerY, 0.12);
-        halo.style.transform = `translate3d(${haloX}px, ${haloY}px, 0)`;
-      }
     }
-    updateVisualizer(t);
+
+    // 30 кадров в секунду визуализатору достаточно — экономим CPU.
+    if (t - lastVisual > 32) {
+      lastVisual = t;
+      updateVisualizer(t);
+    }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
