@@ -369,6 +369,7 @@
   requestAnimationFrame(frame);
 
   /* ---------- Старт ---------- */
+  if (Number.isFinite(audio.duration)) durationEl.textContent = formatTime(audio.duration);
   updateUI();
   updateProgress();
   updateMute();
